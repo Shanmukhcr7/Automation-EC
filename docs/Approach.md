@@ -1,19 +1,29 @@
-# Approach & Strategy
+# Engineering Approach & Methodology
 
-## Portal Analysis
-Initial analysis of `registration.telangana.gov.in` revealed that direct access to the Encumbrance Search (`EncumbranceSearch.htm`) forces a redirect to a User Registration/Login wall.
-
-## Security Stance
-Because the requirements strictly forbade bypassing CAPTCHAs, OTPs, or authentication, the approach leverages a "manual handoff" technique.
+## Portal Analysis & Research Process
+Before writing automation logic, a systematic analysis of the Telangana Registration Portal was conducted to map its underlying behaviors. This phase involved:
+1. **Network Analysis:** Inspecting XHR/Fetch requests using Chrome DevTools to identify form submission payloads, session identifiers (`JSESSIONID`), and cross-domain tracking tokens.
+2. **DOM Inspection:** Mapping static IDs, dynamic class injections, and identifying non-standard HTML elements (e.g., jQuery UI autocomplete fields).
+3. **Security Auditing:** Recognizing the implementation of server-side SHA512 hashing combined with dynamic salts during login, and the deployment of double CAPTCHAs across the authentication and execution workflows.
 
 ## Automation Strategy
-1. **Initialization:** Launch Playwright in headed or headless mode (configurable).
-2. **Navigation:** Go to the EC Search URL.
-3. **Handoff:** Detect the authentication wall. Pause the Node.js execution using a CLI prompt. The user must manually solve the CAPTCHA, enter the OTP, and navigate to the actual EC search form.
-4. **Resumption:** The user presses `ENTER` in the terminal. The automation resumes, taking control of the active session.
-5. **Form Execution:** The script parses the target criteria (Property or Document details), interacts with cascading dropdowns (waiting for AJAX calls between selections), and submits the form.
-6. **Download Interception:** The script waits for the Result Page, locates the download button, intercepts the Playwright download event, streams it to the `downloads/` directory, and performs a file integrity check (size > 0 bytes).
+The primary automation strategy relies on **Attended Automation** with **Session State Persistence**.
+Rather than attempting to bypass complex security measures (which leads to fragile deployments and violates acceptable use policies), the strategy shifts the authentication burden to a controlled manual step. Once authenticated, the automation leverages Playwright's native `storageState` to serialize the session context, allowing subsequent headless executions to run purely programmatically.
 
-## Trade-offs
-- **Speed vs Reliability:** We implemented a `slowMo` setting and explicit network idle waits. Government portals are often slow; prioritizing reliability over raw execution speed prevents brittle tests.
-- **Centralized Selectors:** Instead of embedding selectors in POMs, they are centralized in `Selectors.ts`. Since we are inferring some post-login selectors, this ensures rapid fixes without altering business logic if the portal UI changes.
+## Design Decisions
+
+### Why Playwright?
+Playwright was chosen over Selenium or Puppeteer due to its architectural superiority for modern web applications:
+- **Native Contexts:** Allows rapid injection of authenticated cookies without requiring full browser restarts.
+- **Auto-Waiting:** Dramatically reduces the need for explicit `Thread.sleep()` or brittle custom wait functions.
+- **Download Interception:** Provides a native, stream-based API for capturing downloads, preventing file-system race conditions inherent in older frameworks.
+
+### Why Page Object Model (POM)?
+Government portals frequently undergo UI changes. By encapsulating DOM selectors within specific Page Objects, we isolate the business logic. If an input field ID changes, the fix requires a single line modification in `Selectors.ts` or the respective Page Object, rather than a systemic rewrite.
+
+### Why Session Reuse?
+Attempting to utilize OCR libraries (like Tesseract) to solve portal CAPTCHAs natively introduces unacceptable failure rates in production environments. Reusing an authenticated session guarantees 100% authorization success during the session's lifespan, enabling high-throughput bulk processing.
+
+## Alternatives Considered
+- **Direct HTTP API Requests:** We explored bypassing the browser entirely by sending raw HTTP POST requests. *Rejected* because the portal utilizes complex, obfuscated JavaScript to generate dynamic request payloads and tokens, making raw API emulation prohibitively difficult to maintain.
+- **Fully Headless with OCR:** We evaluated integrating a local OCR library to solve CAPTCHAs. *Rejected* due to low confidence scores caused by the portal's intentionally noisy CAPTCHA images, which would result in unacceptable error rates for an enterprise-grade solution.

@@ -1,37 +1,82 @@
-# Architecture
+# System Architecture
 
-This project follows **Clean Architecture** principles and the **Page Object Model (POM)**.
+## High-Level Architecture
+This automation framework is designed to strictly separate business logic, DOM orchestration, and session state. Built upon Node.js and Playwright, the system is fundamentally an orchestrator that interacts with the Telangana Registration Portal just as a human operator would, utilizing an Attended Automation paradigm.
 
-## Core Principles
-1. **Separation of Concerns:** Business logic (orchestration) is separated from interaction logic (browser manipulation).
-2. **Robustness:** Built-in retry mechanisms, explicit waits, and configurable timeouts.
-3. **Security Compliance:** CAPTCHAs and OTPs are explicitly handled via manual intervention pauses rather than bypassed.
+```mermaid
+graph TB
+    subgraph Execution Layer
+        A[index.ts] --> B[AutomationService]
+        A --> C[DownloadService]
+    end
 
-## Module Responsibilities
+    subgraph Service Layer
+        B --> D[BrowserManager]
+        B --> E[SessionManager]
+        B --> F[Page Objects]
+    end
 
-### 1. `config/`
-Provides strongly-typed, Zod-validated configuration ensuring the application fails fast if misconfigured.
+    subgraph Page Object Layer
+        F --> G[HomePage]
+        F --> H[ECSearchPage]
+        F --> I[ResultPage]
+    end
 
-### 2. `browser/BrowserManager.ts`
-Encapsulates the Playwright lifecycle. It initializes contexts with specific configurations (like ignoring HTTPS errors common in government portals).
+    subgraph Component Layer
+        G --> J[CaptchaHandler]
+        H --> K[Dropdown]
+        I --> L[DownloadManager]
+    end
 
-### 3. `pages/`
-Page Object Models encapsulating specific DOM interactions for specific pages.
-- `HomePage.ts`: Navigation entry.
-- `ECSearchPage.ts`: Form manipulation for Encumbrance Certificate search.
-- `ResultPage.ts`: Result table manipulation and download triggering.
+    subgraph Target System
+        F -.-> M[(Telangana Portal)]
+    end
+```
 
-### 4. `components/`
-Reusable UI components or functional modules.
-- `Dropdown.ts`: Handles dynamically populated dropdowns with retry/wait logic.
-- `CaptchaHandler.ts`: Halts Node execution for manual CAPTCHA/OTP resolution.
-- `DownloadManager.ts`: Intercepts and validates browser downloads.
+## Layered Design & Responsibilities
 
-### 5. `services/`
-Orchestrators that wire up BrowserManager and Page Objects to execute workflows (e.g., `AutomationService.ts`).
+### 1. Execution Layer
+- **Responsibility:** Ingests external triggers (CLI, cron, or eventually HTTP requests), constructs configuration models, and initializes the high-level services.
+- **Key Components:** `index.ts`, `collect_session.ts`.
 
-### 6. `utils/`
-Stateless helpers.
-- `Selectors.ts`: Centralized CSS selectors dictionary.
-- `Wait.ts`, `Retry.ts`, `Helpers.ts`: Fault tolerance mechanisms.
-- `Logger.ts`: Enterprise logging using Winston.
+### 2. Service Layer
+- **Responsibility:** Orchestrates the multi-step business process (e.g., "Retrieve EC"). It dictates *what* needs to be done, while delegating the *how* to the Page Object layer.
+- **Key Components:** `AutomationService.ts`, `DownloadService.ts`.
+
+### 3. Page Object Layer
+- **Responsibility:** Encapsulates all DOM interactions, locators, and UI state validations for specific portal screens.
+- **Key Components:** `HomePage.ts`, `ECSearchPage.ts`, `ResultPage.ts`.
+
+### 4. Component / Utility Layer
+- **Responsibility:** Provides abstract, highly reusable DOM interactions and operational utilities that are agnostic to any specific page.
+- **Key Components:** `Dropdown.ts`, `CaptchaHandler.ts`, `Retry.ts`, `Logger.ts`.
+
+## Dependency Flow
+Dependencies flow strictly downward. The Execution Layer depends on the Service Layer. The Service Layer depends on the Page Object Layer. The Page Object Layer depends on the Component Layer and Playwright APIs.
+This unidirectional flow prevents circular dependencies and ensures that UI changes in the target portal only require modifications at the lowest architectural level (Page Objects).
+
+## Execution Lifecycle
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant App as AutomationService
+    participant Browser as BrowserManager
+    participant Portal as Telangana Portal
+
+    User->>App: Launch Process (npm run dev)
+    App->>Browser: initialize()
+    Browser->>Browser: Inject session.json
+    App->>Portal: Navigate to EC Intro Page
+    Portal-->>App: Render Page
+    App->>Portal: Cross-Domain Form Submit
+    Portal-->>App: Render EC Search Form
+    App->>Portal: Fill Search Criteria
+    App->>User: Pause for CAPTCHA Resolution
+    User-->>App: Confirm CAPTCHA solved
+    App->>Portal: Submit Form
+    App->>Portal: Intercept PDF Stream
+    Portal-->>App: Return PDF
+    App->>App: Verify file integrity
+    App->>User: Log Success & Exit
+```

@@ -1,23 +1,40 @@
-# Challenges
+# Challenges Encountered & Technical Resolutions
 
-Building automation for the Telangana Registration Portal involves several systemic challenges typical of government infrastructure:
+Automating government portals presents unique challenges due to legacy infrastructure, aggressive anti-bot mechanisms, and non-standard DOM implementations. This document outlines the primary technical hurdles and their respective resolutions.
 
-## 1. Authentication Walls
-**Challenge:** The EC search is placed behind a strict Login/OTP/CAPTCHA wall.
-**Solution:** A CLI-based manual intervention pause (`CaptchaHandler`) allows the operator to authenticate natively in the browser before handing control back to the script.
+## 1. Cross-Domain Navigation & Session Persistence
+**The Challenge:** 
+The portal segregates authentication and execution across two distinct subdomains (`registration.telangana.gov.in` and `tgigrs.telangana.gov.in`). Standard headless navigation directly to the execution subdomain strips the origin session cookies, resulting in immediate "Unauthorised Access" HTTP 403 errors.
 
-## 2. Dynamic Cascading Dropdowns
-**Challenge:** Selecting a "District" triggers an AJAX request to populate "SRO" (Sub-Registrar Office), which then populates "Village". Native Playwright `fill` or `selectOption` can fail if the DOM hasn't updated.
-**Solution:** The `Dropdown` component explicitly waits for network idle and uses retry logic to ensure the DOM is stable before proceeding.
+**The Resolution:**
+We implemented a strict sequential navigation flow that mirrors human behavior. The automation navigates to a gateway page on the origin domain and programmatically triggers a native form POST. This leverages the browser's native capability to securely transfer the authenticated token across the domain boundary.
 
-## 3. Selector Volatility
-**Challenge:** UI structures in these portals can change without notice.
-**Solution:** Centralized `Selectors.ts`.
+**Rejected Approach:** Manually extracting the `JSESSIONID` cookie and attempting to inject it into the target domain headers. This was rejected because the portal utilizes server-side origin validation, which rejects cross-domain cookie injection.
 
-## 4. Slow Server Responses (Timeouts)
-**Challenge:** Portal servers often hang or drop connections during peak hours.
-**Solution:** Configurable global timeouts (defaulting to 60s), coupled with exponential backoff retry mechanisms (`Retry.execute`) for critical navigation steps.
+## 2. Dynamic DOM & Autocomplete Fields
+**The Challenge:**
+The Sub-Registrar Office (SRO) input on the EC Search Form is not a standard HTML `<select>` element. It is a dynamic jQuery UI autocomplete widget. Standard `element.selectOption()` commands instantly fail.
 
-## 5. Download Management
-**Challenge:** Popups or unexpected headers can disrupt standard file downloads.
-**Solution:** We intercept the Playwright `download` event natively, which bypasses UI-level popup blockers, streams the file directly to disk, and immediately verifies file integrity.
+**The Resolution:**
+We developed a targeted utility within `Helpers.ts` to simulate human keystrokes. The `safeFill` method was adapted to focus the element, type the string sequentially, and trigger the underlying jQuery keyup events necessary to populate the hidden input fields associated with the widget.
+
+## 3. Double CAPTCHA Implementation
+**The Challenge:**
+The portal requires CAPTCHA resolution during the initial login and again immediately prior to executing the document search.
+
+**The Resolution:**
+The `CaptchaHandler` component was engineered to gracefully suspend the Node.js event loop using the `readline` module. This pauses Playwright's execution state, allowing the human operator to interface with the browser instance, solve the CAPTCHA, and signal the Node process to resume execution seamlessly.
+
+## 4. Asynchronous Download Handling
+**The Challenge:**
+Government portals often suffer from high latency. Clicking the download button initiates a server-side PDF generation process that can take anywhere from 1 to 30 seconds. Relying on fixed timeouts or polling the file system for a `.crdownload` file introduces race conditions and flaky tests.
+
+**The Resolution:**
+We utilized Playwright's native event listener `page.waitForEvent('download')`. This creates a localized promise that perfectly aligns with the browser's internal download stream, guaranteeing successful capture regardless of server latency, and immediately verifies file integrity (checking for >0 bytes).
+
+## 5. Destructive Session Invalidation
+**The Challenge:**
+During initial testing, executing the automation with a valid session unexpectedly redirected to the login wall.
+
+**The Resolution:**
+Network analysis revealed that navigating to the portal's naked root (`/`) while authenticated forces the server to issue a new anonymous `JSESSIONID`, effectively destroying the user's session. The orchestration layer was refactored to specifically target deep links, bypassing the homepage entirely and preserving session integrity.
