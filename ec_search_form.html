@@ -1,0 +1,1001 @@
+<!DOCTYPE html><html class="no-js" lang="en"><!--<![endif]--><head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <title>User Registration</title>
+
+        <!-- CSS FILES -->
+
+
+        
+        
+        
+        <link href="/resources/css/bootstrap.min.css;jsessionid=jpqnqGQMt6McNhdsJfp0GK4khftYm5LKnpYsv3PJjTJJ8nmXJNY5!1849591189" rel="stylesheet">
+        <link href="/resources/css/style.css;jsessionid=jpqnqGQMt6McNhdsJfp0GK4khftYm5LKnpYsv3PJjTJJ8nmXJNY5!1849591189" rel="stylesheet">
+        <link href="" rel="stylesheet">
+        <link href="" rel="stylesheet">
+        <link href="/resources/css/animate.css;jsessionid=jpqnqGQMt6McNhdsJfp0GK4khftYm5LKnpYsv3PJjTJJ8nmXJNY5!1849591189" rel="stylesheet">
+        <link rel="shortcut icon" type="image/x-icon" href="/resources/img/favicon.ico">    
+        
+        
+        
+        
+        <script src="/resources/js/jquery-3.7.1.js;jsessionid=jpqnqGQMt6McNhdsJfp0GK4khftYm5LKnpYsv3PJjTJJ8nmXJNY5!1849591189"></script>
+        <script src="/resources/js/validations.js;jsessionid=jpqnqGQMt6McNhdsJfp0GK4khftYm5LKnpYsv3PJjTJJ8nmXJNY5!1849591189"></script>
+        <script src=""></script>
+        <script src="/resources/js/jquery-3.7.1.js;jsessionid=jpqnqGQMt6McNhdsJfp0GK4khftYm5LKnpYsv3PJjTJJ8nmXJNY5!1849591189"></script>
+        <!--<script type="text/javascript" src="/resources/js/sha512.js"></script>--> 
+
+        <script src="/resources/js/crypto-js.min.js"></script>
+
+
+        <script>
+            function generateSHA512(message) {
+                return CryptoJS.SHA512(message).toString(CryptoJS.enc.Hex);
+            }
+
+        </script>
+
+        <script>
+
+            function doSubmit() {
+                var user_type = document.getElementById('user_type').value;
+                user_type = parseInt(user_type);
+                if (user_type == 0) {
+                    alert('Please select user Type');
+                    return false;
+                }
+                var key = '202606302313526';
+
+                if (document.getElementById('username').value === "") {
+                    alert("Please Enter the Mobile /Email id");
+                    document.forms[0].username.focus();
+                    return false;
+                }
+
+                if (document.getElementById('password').value == "") {
+                    alert("Please Enter the Password");
+                    document.forms[0].password.focus();
+                    return false;
+                }
+
+                var captchastr = document.getElementById("captcha").value;
+
+
+                if (captchastr == "")
+                {
+                    alert("Enter Captcha");
+                    document.getElementById("captcha").focus();
+                    return false;
+                }
+
+//                var encpassword = hex_sha512(document.getElementById('password').value);
+//                document.getElementById('encpassword').value = encpassword;
+//                if (user_type == 1) {
+//                    var pwd = hex_sha512(document.getElementById('password').value);
+//
+//                    pwd = hex_sha512(key + pwd);
+//
+//                    document.getElementById('encpw').value = pwd;
+//                    document.getElementById('myForm').action = "/authentication.htm";
+//                    document.getElementById('password').value = hex_sha512(key);
+//                    document.getElementById('myForm').submit();
+//
+//                } else if (user_type == 2) {
+//
+//                    var pwd = hex_sha512(document.getElementById('password').value);
+//                    pwd = hex_sha512(key + pwd);
+//
+//                    document.getElementById('encpw').value = pwd;
+//                    document.getElementById('myForm').action = "/getCitizen_login.htm";
+//                    document.getElementById('password').value = hex_sha512(key);
+//                    document.getElementById('myForm').submit();
+//
+//                } else if (user_type == 3) {
+//                    var pwd = hex_sha512(document.getElementById('password').value);
+//                    pwd = hex_sha512(key + pwd);
+//
+//                    document.getElementById('encpw').value = pwd;
+//                    document.getElementById('myForm').action = "/getStamp_Vendor_login.htm";
+//                    document.getElementById('password').value = hex_sha512(key);
+//                    document.getElementById('myForm').submit();
+//
+//                }
+
+                var encpassword = generateSHA512(document.getElementById('password').value);
+                document.getElementById('encpassword').value = encpassword;
+                if (user_type == 1) {
+                    var pwd = generateSHA512(document.getElementById('password').value);
+
+                    pwd = generateSHA512(key + pwd);
+
+                    document.getElementById('encpw').value = pwd;
+                    document.getElementById('myForm').action = "/authentication.htm";
+                    document.getElementById('password').value = generateSHA512(key);
+                    document.getElementById('myForm').submit();
+
+                } else if (user_type == 2) {
+
+                    var pwd = generateSHA512(document.getElementById('password').value);
+                    pwd = generateSHA512(key + pwd);
+
+                    document.getElementById('encpw').value = pwd;
+                    document.getElementById('myForm').action = "/getCitizen_login.htm";
+                    document.getElementById('password').value = generateSHA512(key);
+                    document.getElementById('myForm').submit();
+
+                } else if (user_type == 3) {
+                    var pwd = generateSHA512(document.getElementById('password').value);
+
+                    pwd = generateSHA512(key + pwd);
+                    document.getElementById('encpw').value = pwd;
+                    document.getElementById('myForm').action = "/getStamp_Vendor_login.htm";
+                    document.getElementById('password').value = generateSHA512(key);
+                    document.getElementById('myForm').submit();
+
+                }else if (user_type == 4) {
+                    var pwd = generateSHA512(document.getElementById('password').value);
+
+                    pwd = generateSHA512(key + pwd);
+                    document.getElementById('encpw').value = pwd;
+                    document.getElementById('myForm').action = "/getProhibitionLogin.htm";
+                    document.getElementById('password').value = generateSHA512(key);
+                    document.getElementById('myForm').submit();
+
+                }
+
+
+
+
+                return true;
+            }
+
+
+
+            function wordCapital(obj) {
+                obj.value = obj.value.toUpperCase();
+            }
+
+            function DrawCaptcha()
+            {
+                document.getElementById('frame1').src = "/Captcha.jpg";
+                document.getElementById("txtInput").focus();
+                return false;
+
+            }
+
+
+            function getLoginType(no) {
+                document.getElementById("user_lable").innerHTML = "Mobile/Email ID";
+                document.getElementById("citizen_foot").style = 'display:blank;'
+                document.getElementById("sv_foot").style = 'display:none;'
+                if (no == 1) {
+                    document.getElementById("user_lable").innerHTML = "Username";
+                    document.getElementById("citizen_foot").style = 'display:none;'
+                    document.getElementById("sv_foot").style = 'display:none;'
+                } else if (no == 2) {
+                    document.getElementById("citizen_foot").style = 'display:blank;'
+                    document.getElementById("user_lable").innerHTML = "Mobile/Email ID";
+                    document.getElementById("sv_foot").style = 'display:none;'
+                } else if (no == 3) {
+                    document.getElementById("citizen_foot").style = 'display:none;'
+                    document.getElementById("user_lable").innerHTML = "Mobile/Email ID";
+                    document.getElementById("sv_foot").style = 'display:blank;'
+                }else if (no == 4) {
+                    document.getElementById("citizen_foot").style = 'display:none;'
+                    document.getElementById("user_lable").innerHTML = "Username";
+                    document.getElementById("sv_foot").style = 'display:none;'
+                }
+
+            }
+            function isNumber(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if (charCode == 32) {
+//                if (charCode > 32 && (charCode < 48 || charCode > 57)) {
+                    return false;
+                }
+                return true;
+            }
+
+
+            function getClearpassword() {
+                document.getElementById("password").value = '';
+            }
+
+
+        </script>
+
+    </head>
+    <body>
+        <!--Start Header-->
+        
+
+
+    
+ 
+
+
+
+<meta http-equiv="cache-control" content="max-age=0">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
+<meta http-equiv="pragma" content="no-cache">
+
+
+
+
+   
+
+    
+
+    <header id="header">
+        
+        
+        <script src="/resources/js/wow.min.js;jsessionid=jpqnqGQMt6McNhdsJfp0GK4khftYm5LKnpYsv3PJjTJJ8nmXJNY5!1849591189"></script>
+
+         
+        <!-- old version 2024/08/13 -->
+        
+        <script src="/resources/js/jquery-3.7.1.js;jsessionid=jpqnqGQMt6McNhdsJfp0GK4khftYm5LKnpYsv3PJjTJJ8nmXJNY5!1849591189"></script>                        
+
+        <!--        <div class="container-fluid toprow">
+                <div class="container">
+                    <div class="col-xs-6 col-sm-5 fontlistdiv">
+                        <a href="#" id="btn-increase">A+</a>
+                        <a href="#" id="btn-decrease">A-</a>
+                        <a href="#" id="btn-orig">A</a>
+                        <a href="#" style="background: #fff; color: #000" class="nocolor btn_typo">A</a>
+                        <a href="#" style="background: #000; color: #fff" class="color btn_typo">A</a>
+                    </div>
+                    <div class="col-xs-6 col-sm-7 toprightlinks">                
+                        <div id="top-info" class="clearfix">
+                            <span class="hidden-xs" style="text-align: right;" id="scheduletime"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+
+
+
+        <!-- Start info-bar -->
+
+        <div class="enquiry">  
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <p>Toll Free No. for Enquiries :
+                            <span><a href="tel:+18005994788" style="color: #fff;"><i class="fa fa-phone"> 1800 599 4788 &nbsp;&nbsp;</i></a><a href="https://wa.me/918247619983" style="color: #fff;"> <i class="fa fa-whatsapp" aria-hidden="true"> 8247619983</i></a></span></p>
+                    </div>
+                    <div class="col-lg-6 col-md-6 hidden-xs">
+                        <div class="toprow">
+                            <div class="fontlistdiv">
+                                <a href="#" id="btn-increase">A+</a>
+                                <a href="#" id="btn-decrease">A-</a>
+                                <a href="#" id="btn-orig">A</a>
+                                <a href="#" style="background: #fff; color: #000" class="nocolor btn_typo">A</a>
+                                <a href="#" style="background: #000; color: #fff" class="color btn_typo">A</a>
+                            </div>
+                        </div>   
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--        <div id="info-bar">
+                    <div class="container">
+                        <div>
+                            <div class="col-lg-3 col-md-3 col-sm-2 col-xs-2 top-info">
+                                <a href="/index.html">
+                                    <img src="/resources/img/telanganalogo.png" alt="IGRS Logo" >
+                                </a>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-8 col-xs-10 dept_info text-center">
+                                <h1>Registration & Stamps Department</h1>
+                                <h2>Government of Telangana</h2>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-2 hidden-xs dept_min">
+                                    <img src="/resources/img/TS-CM.png" alt="IGRS Logo" >
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+
+        <div id="info-bar">
+            <div class="container-fluid">
+                <div>
+
+                    <div class="col-lg-3 col-md-2 col-sm-2 col-xs-12 dept_min_cm">                         
+                        <img src="/resources/img/revanthreddy.jpg" alt="">                           
+                        <h5>Sri Anumula Revanth Reddy</h5>
+                        <h6>Hon’ble Chief Minister of Telangana</h6>
+                    </div>
+                    <div class="col-lg-6 col-md-8 col-sm-8 col-xs-12 top-info text-center">
+                        <img src="/resources/img/telanganalogo.png" alt="IGRS Logo" class="telangana_emblem">
+                        <img src="/resources/img/telangana-rising.png" alt="Telangana Rising Logo" class="rising_logo"><br>
+                        <a href="/index.htm">     
+
+                            <h1>Registration &amp; Stamps Department</h1>
+                            <h2>Government of Telangana</h2>
+                        </a>
+                    </div>
+                    <!--                    <div class="hidden-lg hidden-md hidden-sm col-xs-12 dept_min1">
+                                            <div>
+                                                <img src="/resources/img/revanthreddy.jpg" alt="">
+                                                <h5>Sri Anumula Revanth Reddy</h5>
+                                                <h6>Hon’ble Chief Minister</h6>
+                                            </div>
+                                        </div>
+                    -->                   
+                    <div class="col-lg-3 col-md-2 col-sm-2 col-xs-12 dept_min_rev">
+                        <img src="/resources/img/srinivasareddy.jpg" alt="">
+                        <h5>Sri Ponguleti Srinivasa Reddy</h5>
+                        <h6>Hon’ble Minister for Revenue, Telangana</h6>
+                    </div>
+
+                </div>
+            </div>
+        </div>  
+        <!--/#info-bar -->
+
+        <div id="nv-bar">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-md-12 col-sm-12">
+                        <!-- Navigation
+                        ================================================== -->
+                        <div class="navbar navbar-default navbar-static-top" role="navigation">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                            </div>
+                            <div class="navbar-collapse collapse">
+                                <ul class="nav navbar-nav sm" data-smartmenus-id="1782841390862997">
+                                    
+                                        <li class="active"><a href="/index.htm">Home</a> </li>
+                                        
+                                        
+
+                                    <li><a href="/aboutus.htm" target="_self">About Us</a> </li>
+                                    <li><a href="#" target="_self" class="has-submenu"><span class="data-hover" data-hover="Organization">Organization</span><span class="sub-arrow">...</span></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="/structure.htm" target="_self">Structures</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#" target="_self" class="has-submenu"><span class="data-hover" data-hover="Act_&amp;_Rules">Acts&amp;Rules</span><span class="sub-arrow">...</span></a>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a href="#" target="_self" class="has-submenu">Registration Act 1908<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/RegistrationAct.htm" target="_blank">Act</a></li>
+
+                                                    <li><a href="/RegistrationRules.htm" target="_blank">Rules</a></li>
+                                                    <li><a href="#" class="has-submenu">Standing Orders<span class="sub-arrow">...</span></a>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a href="/Standing_Orders_1_to_250.htm" target="_blank">S.O. 1 to 250</a></li>
+                                                            <li><a href="/Standing_Orders_251_to_595.htm" target="_blank">S.O. 251 to 595</a></li>
+                                                            <li><a href="/Standing_Orders_596_to_853.htm" target="_blank">S.O. 596 to 853</a></li>
+                                                            <li><a href="/Standing_Orders_854_to_1094.htm" target="_blank">S.O. 854 to 1094</a></li>
+                                                            <li><a href="/Standing_Orders_1095_to_1369.htm" target="_blank">S.O. 1095 to 1369</a></li>
+                                                            <li><a href="/Standing_Orders_1370_to_1628.htm" target="_blank">S.O. 1370 to 1628</a></li>
+                                                        </ul>
+                                                    </li>
+                                                    <li><a href="/registrationImportantCirculars.htm" target="_self">Important Circulars</a></li>
+                                                    <li><a href="/RegistrationForms.htm" target="_blank">Forms</a></li>
+                                                    <li><a href="/registrationProcedure.htm" target="_self">Procedures</a></li>
+                                                    <li><a href="/RegistrationFees.htm" target="_blank">Fees</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#" target="_self" class="has-submenu">Indian Stamp Act 1899<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/StampAct.htm" target="_blank">Act</a></li>
+                                                    <li><a href="/StampRules.htm" target="_blank">Rules</a></li>
+                                                    <li><a href="/stampImportantCirculars.htm" target="_self">Important Circulars</a></li>
+                                                    <li><a href="/stampImportantCirculars.htm" target="_self">Forms</a></li>
+                                                    <li><a href="/stampProcedure.htm" target="_self">Procedures</a></li>
+                                                    <li><a href="/StampFees.htm" target="_blank">Fees</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#" target="_self" class="has-submenu">Hindu Marriage<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/HinduMarriageAct.htm" target="_blank">Act</a></li>
+                                                    <li><a href="/HinduMarriageRules.htm" target="_blank">Rules</a></li>
+                                                        
+                                                    <li><a href="#" target="_self" class="has-submenu">Forms<span class="sub-arrow">...</span></a>
+                                                        <ul class="dropdown-menu">
+                                                    <!--<li><a href="/resources/downloads/HinduMarriageAppForm_Disabled.pdf" target="_blank">Application Forms</a></li>-->
+                                                            <li><a href="/HinduMarriageForms.htm" target="_blank">Others</a></li>
+                                                        </ul>
+                                                    </li>
+                                                    <li><a href="/hinduMarriageProcedure.htm" target="_self">Procedures</a></li>
+                                                    <li><a href="/HinduMarriageFees.htm" target="_blank">Fees</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#" target="_self" class="has-submenu">Special Marriage<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/SpecialMarriageAct.htm" target="_blank">Act</a></li>
+                                                    <li><a href="/SpecialMarriageRules.htm" target="_blank">Rules</a></li>
+                                                        
+                                                    <li><a href="#" class="has-submenu">Forms<span class="sub-arrow">...</span></a>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a href="/SpecialMarriageForms.htm" target="_blank">General Form</a></li>
+                                                            <li><a href="/SpecialMarriageForms_Section5.htm" target="_blank">Section 5</a></li>
+                                                            <li><a href="/SpecialMarriageForms_Section16.htm" target="_blank">Section 16</a></li>
+                                                        </ul>
+                                                    </li>
+                                                    <li><a href="/specialMarriageProcedure.htm" target="_self">Procedures</a></li>
+                                                    <li><a href="/SpecialMarriageFees.htm" target="_blank">Fees</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#" target="_self" class="has-submenu">Christian Marriage<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/ChristianMarriageAct.htm" target="_blank">Act</a></li>
+                                                        
+                                                </ul>
+                                            </li>
+                                            <li><a href="#" target="_self" class="has-submenu">Notaries<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/NotariesAct.htm" target="_blank">Act</a></li>
+                                                    <li><a href="/NotariesRules.htm" target="_blank">Rules</a></li>
+                                                        
+                                                    <li><a href="/NotariesForm.htm" target="_blank">Forms</a></li>
+                                                        
+                                                    <li><a href="/NotariesFees.htm" target="_blank">Fees</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#" target="_self" class="has-submenu">Partnership<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/PartnershipAct.htm" target="_blank">Act</a></li>
+                                                    <li><a href="/PartnershipRules.htm" target="_blank">Rules</a></li>
+                                                        
+                                                    <li><a href="#" target="_self" class="has-submenu">Forms<span class="sub-arrow">...</span></a>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a href="/PartnershipFormIV.htm" target="_blank">Forms IV</a></li>
+                                                            <li><a href="/PartnershipFormV.htm" target="_blank">Forms V</a></li>
+                                                        </ul>
+                                                    </li>
+                                                    <li><a href="/HowToRegisterAFirm.htm" target="_blank">Procedures</a></li>
+                                                    <li><a href="/PartnershipFees.htm" target="_blank">Fees</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#" target="_self" class="has-submenu">Societies<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/SocietiesAct.htm" target="_blank">Act</a></li>
+                                                    <li><a href="/ap_socities_act_adapted_details.htm" target="_blank">AP Societies Registration Act adaptation GO</a></li>
+                                                        
+                                                        <!--<li><a href="/resources/downloads/SocietiesForms.pdf" target="_blank">Forms</a></li>-->
+                                                    <li><a href="/SocietiesForms.htm" target="_blank"> Model MOA &amp; Bye-laws</a></li>
+                                                    <li><a href="/societyRegistrationProcedure.htm" target="_self">Procedures</a></li>
+                                                        
+                                                </ul>
+                                            </li>
+                                            <li><a href="#" target="_self" class="has-submenu">Chit Fund<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/ChitFundAct.htm" target="_blank">Act</a></li>
+                                                    <li><a href="/ChitFundRules.htm" target="_blank">Rules</a></li>
+                                                        
+                                                    <li><a href="/ChitFundForms.htm" target="_blank">Forms</a></li>
+                                                        
+                                                    <li><a href="/ChitFundFees.htm" target="_blank">Fees</a></li>
+                                                </ul>
+                                            </li>
+
+
+                                        </ul>
+                                    </li>
+                                    <li><a href="#" target="_self" class="has-submenu"><span class="data-hover" data-hover="FAQ's">FAQ's</span><span class="sub-arrow">...</span></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="/faqsRegistration.htm" target="_self">Registration</a></li>
+                                            <li><a href="/faqsStamps.htm" target="_self">Stamps</a></li>
+                                            <li><a href="/faqsSociety.htm" target="_self">Society</a></li>
+                                            <li><a href="/faqsMarriage.htm" target="_self">Marriages</a></li>
+                                            <li><a href="/faqsNRI.htm" target="_self">NRI Registrations</a></li>
+                                            <li><a href="/faqsTrust.htm" target="_self">Trusts</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#" target="_self" class="has-submenu"><span class="data-hover" data-hover="RTI_Act">RTI Act</span><span class="sub-arrow">...</span></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#" target="_self" class="has-submenu">RTI Act<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/RTI_ACT.htm" target="_blank">Act</a></li>
+                                                    <li><a href="/RTI_ACT_Amendment.htm" target="_blank">Amendment</a></li>
+                                                    <li><a href="/RTI_Annexure.htm" target="_blank">Handbook Under Section IV <br> (RTI ACT)</a></li> 
+                                                    <li><a href="/RTI_Citizen_Dashboard.htm" target="_blank">Handbook Under Section IV Of SRO's <br> (RTI ACT)</a></li> 
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a href="#" target="_self" class="has-submenu">Fee GO's<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/GO_No8.htm" target="_blank">GO 8</a></li>
+                                                    <li><a href="/GO_No9.htm" target="_blank">GO 9</a></li>
+                                                    <li><a href="/GO_No10.htm" target="_blank">GO 10</a></li>
+                                                    <li><a href="/GO_No22.htm" target="_blank">GO 22</a></li>
+                                                </ul>
+                                            </li>
+    <!--                                        <li><a href="/apios.htm" target="_self">PIO's / APIO's</a></li>-->
+                                        </ul>
+                                    </li>
+                                    <li><a href="#" target="_self" class="has-submenu"><span class="data-hover" data-hover="Downloads">Downloads</span><span class="sub-arrow">...</span></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="/resources/downloads/RTI_APIO_PIO_AA.pdf" target="_NEW">RTI APIO PIO AA</a></li>
+                                            <li><a href="/Registration_User_Guide.htm" download="">Registration User Guide</a></li>
+                                            <li><a href="#" target="_self" class="has-submenu">Registration Work Flow<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/resources/downloads/Property_Transaction_Advisory.pdf" download="">Property Advisory</a></li>
+                                                    <li><a href="/resources/downloads/Slot_Booking_Advisory.pdf" download="">Slot Booking Advisory</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#" target="_self" class="has-submenu">User Manuals<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/preregistration_user_guide.htm" download="">Pre Registration</a></li>
+                                                    <li><a href="/eChallan_User_Manual.htm" download="">eSTAMPS</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#" target="_self" class="has-submenu">Sales Deed<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <!--<li><a href="/resources/downloads/Sale_Agricultural Lands.doc" download>Agriculture</a></li>-->
+                                                    <li><a href="/Sale_Agricultural_Lands.htm" download="">Agriculture</a></li>                                                    
+                                                    <li><a href="/Sale_Flat.htm" download="">Flats</a></li>
+                                                    <li><a href="/Sale_House.htm" download="">Houses</a></li>
+                                                    <li><a href="/Sale_Plot.htm" download="">Open Plots</a></li>                                          
+                                                </ul>
+                                            </li>
+                                            
+                                            <li><a href="#" target="_self" class="has-submenu">Agreement of Sales<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/AGREEMENT OF SALE FOR OPEN PLOT.htm" download="">Open Plots</a></li>                                          
+                                                </ul>
+                                            </li>
+                                            
+                                            <li><a href="#" target="_self" class="has-submenu">GPA<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/resources/downloads/Attestation_of_special_Power_of_Attorney.doc" download="">Attestation of special Power of Attorney</a></li>                                          
+                                                    <li><a href="/resources/downloads/GPA_(without_Sale_etc.,).doc" download="">GPA (without Sale etc.,)</a></li>                                          
+                                                    <li><a href="/resources/downloads/GPA_in_favour_of_family_members_to_sell_etc.,_of_the_property.doc" download="">GPA in favour of family members to sell etc., of the property</a></li>                                          
+                                                    <li><a href="/resources/downloads/GPA_in_favour_of_other_than_family_members_to_sell_etc.,_of_the_property.doc" download="">GPA in favour of other than family members to sell etc., of the property</a></li>   
+                                                    <li><a href="/resources/downloads/WILL_DEED.pdf" download="">WILL DEED</a></li>     
+                                                </ul>
+                                            </li>
+                                            
+                                            <li>
+                                                <a href="#" target="_self" class="has-submenu">Mortgage<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#" target="_self" class="has-submenu">Mortgage with possession<span class="sub-arrow">...</span></a>
+                                                        <ul class="dropdown-menu">
+                                                            <!--<li><a href="/resources/downloads/Mortgage_Agricultural Land.doc" download>Agriculture</a></li>-->
+                                                            <li><a href="/Mortgage_Agricultural_Land.htm" download="">Agriculture</a></li>
+                                                            <li><a href="/Mortgage_Flats_Houses.htm" download="">Flats</a></li>
+                                                            <li><a href="/Mortgage_Flats_Houses.htm" download="">Houses</a></li>
+                                                            <li><a href="/Mortgage_General.htm" download="">General Modes</a></li> 
+                                                        </ul>
+                                                    </li>
+                                                    <li><a href="#" target="_self" class="has-submenu">Simple Mortgage<span class="sub-arrow">...</span></a>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a href="/Agricultural_Lands_SimpleMortgage.htm" download="">Agriculture</a></li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a href="#" target="_self" class="has-submenu">Gift<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/Gift_to_charitable.htm" download="">To Charity</a></li>
+                                                    <li><a href="/Gift_to_family.htm" download="">To Family</a></li>
+                                                    <li><a href="/Gift_to_otherthan_family.htm" download="">To other than family member</a></li>
+                                                    <li><a href="#" class="has-submenu">Pure Gift<span class="sub-arrow">...</span></a>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a href="/PURE_GIFT.htm" download="">Agriculture</a></li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a href="#" target="_self" class="has-submenu">Lease<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/LEASE_Agricultural_lands.htm" download="">Agriculture</a></li>
+                                                    <li><a href="/resources/downloads/LEASE_Non-Agriculture.doc" download="">Non-Agriculture</a></li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a href="#" target="_self" class="has-submenu">Release Deed<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/Release_deed_agricultural_lands.htm" download="">Agriculture</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="/Form_32A.htm" target="_blank">Download 32-A Form</a></li>
+                                            <li>
+                                                <a href="#" target="_self" class="has-submenu">Firm Registration<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/FormNo_I.htm" download="">Form I</a></li>
+                                                    <li><a href="/FormNo_II.htm" download="">Form II</a></li>
+                                                    <li><a href="/FormNo_III.htm" download="">Form III</a></li>
+                                                    <li><a href="/FormNo_IV.htm" download="">Form IV</a></li>
+                                                    <li><a href="/FormNo_V.htm" download="">Form V</a></li>
+                                                    <li><a href="/FormNo_VI.htm" download="">Form VI</a></li>
+                                                    <li><a href="/FormNo_VII.htm" download="">Form VII</a></li>
+                                                </ul>
+                                            </li>
+                                            <!--                                        <li><a href="#" target="_self">Hindu Marriage</a>
+                                                                                        <ul class="dropdown-menu">
+                                                                                            <li><a href="/resources/downloads/HinduMarriageAppForm.pdf" target="_blank">Form A</a></li>
+                                                                                        </ul>
+                                                                                    </li>-->
+                                            <li><a href="#" target="_self" class="has-submenu">Market Value<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/Manual_Market_Value.htm" target="_blank">Manual Market Value Form </a></li>
+                                                    <li><a href="/Online_Market_Value.htm" target="_blank">Online Market Value Form </a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="/Indent_Stamp.htm" target="_blank">INDENT FOR STAMP</a></li>
+                                            <li><a href="/CC_Application.htm" target="_blank">CC APPLICATION</a></li>
+                                            <li><a href="/EC_Application.htm" target="_blank">EC APPLICATION</a></li>
+
+                                            <li><a href="#" target="_self" class="has-submenu">GAZETTE NOTIFICATIONS<span class="sub-arrow">...</span></a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/resources/downloads/Gazette_notofication.pdf" target="_blank">Download</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+
+                                    </li>
+                                    <li><a href="/citizencharter.htm" target="_self">Citizen's Charter</a></li>
+                                    <li><a href="/readyReckoner.htm" target="_self">Ready Reckoner </a></li>
+                                    <li>
+                                        <a href="#" target="_self" class="has-submenu">EODB<span class="sub-arrow">...</span></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="/eodb.htm" target="_self">Circulars</a></li>
+                                            <li><a href="/eodb_Fee_details.htm" target="_self">Fee</a></li>
+                                            <li><a href="/eodb_Decriminilisation_List.htm" target="_self">Criminal Provision</a></li>
+                                            <li><a href="https://registration.telangana.gov.in/RSDB/eodb_dashboard.htm" target="_new">Dashboard Reports</a></li>     
+                                            <li><a href="/eodb_information_wizard.htm" target="_self">Information Wizard</a></li>
+                                        </ul>
+                                    </li>
+                                    <!--<li><a href="/readyReckoner.htm" target="_self">Know Your Stamp Duty</a></li>-->
+                                    <!--<li><a href="/eodb.htm" target="_self">EODB</a></li>-->
+                                                        
+                                        
+                                        <!--                                    <li class="dl">-->
+                                        <li class="dl"><a href="/auth_login.htm" target="_self">Login</a></li>
+                                            
+                                        
+                                        
+
+
+<!--<li><a href="/departmentLogin.htm" target="_blank">Department Login</a></li>-->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/.container -->
+        </div>
+        <!--/#logo-bar -->
+
+
+    </header>
+
+
+
+
+            <!--End Header-->
+
+            <div>
+
+                <div class="container">
+                    <div class=" col-md-offset-4 col-md-4 col-sm-offset-3 col-sm-6 u_l">
+                    <form id="myForm" action="/EncumbranceSearch.htm;jsessionid=jpqnqGQMt6McNhdsJfp0GK4khftYm5LKnpYsv3PJjTJJ8nmXJNY5!1849591189" method="post" onsubmit="return doSubmit()" autocomplete="off">
+                        <input type="hidden" name="encpwd" id="encpw">
+                        <input type="hidden" name="encpassword" id="encpassword">
+                        <h2>USER LOGIN</h2>
+
+                        <h4 style="color: red; text-align: center;"></h4>
+                        <div>
+                            <label for="">User Type</label>
+                            <select id="user_type" class="form-control" required="true" onchange="getLoginType(this.value)">
+                                <option value="0">Select</option>
+                                <option value="1">Department</option>
+                                <option value="2">Citizen</option>
+                                <option value="3">Stamp Vendor</option>
+                                <option value="4">Collector / Endowment / Waqf</option>
+
+                            </select>
+                            
+                            <!--onblur="getClearpassword()"-->
+                        </div>
+                        <div>
+                            <label for="" id="user_lable">Mobile/Email ID</label>
+                            <input type="text" id="username" name="username" class="form-control" onblur="getClearpassword()" placeholder="" required="">
+                        </div>
+                        <div>
+                            <label for="">Password </label>
+                            <input type="Password" name="password" id="password" class="form-control" onkeypress="return isNumber(event)" required="">
+                        </div>
+                        <div class="cpt">
+                            <label for="">Enter Captcha </label>
+                            <input type="text" id="captcha" name="captcha" style="text-transform: uppercase;" onkeyup="return wordCapital(this)" class="form-control" required="">
+
+                            <img src="/Captcha.jpg">
+                            <!--<img src="/captcha.htm" alt="CAPTCHA" id="captcha-image" >-->
+                        </div>
+
+                        <div style="text-align: center;">
+                            <button type="submit" class="btn btn-primary" style="width: 100% !important; margin: 10px 0 0px !important;">Login</button>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br>
+                        <div id="citizen_foot" style="">
+                            <span style="float: right;"><a href="/citizen_forgot_pwd.htm" target="_self" style="color: #F42C2C;"><small>Forgot Password</small></a> </span>
+                            <span style="float: left;"><small>New Users? <a href="/citizen_registration.htm" style="color: #F42C2C;">Register</a> </small></span>
+                        </div>
+                        <div id="sv_foot" style="display: none;">
+                            <span style="float: right;">
+                                <a href="/Stamp_Vendor_forgot_pwd.htm" target="_self" style="color: #F42C2C;"><small>Forgot Password</small></a>  
+                            </span>
+                            <span style="float: left;"><small>New Users? <a href="/Stamp_Vendor_Registration.htm" style="color: #F42C2C;">Register</a> </small></span> 
+                        </div>
+
+                        <div class="clearfix"></div>
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+        </div>
+
+        <!--start footer-->
+        
+
+
+
+
+
+
+<style>
+    .footer {
+        /*position: fixed;*/
+        left: 0;
+        bottom: 0;
+        width: 100%;      
+    }
+
+</style>
+
+
+
+
+    
+        <div class="clearfix"></div>
+        <br>
+        <!--<div style="text-align: center; color: #f12522; padding-bottom: 15px;"> The information provided online is updated, and no physical visit is required.</div>-->
+        <!--<div style="height: 50px;"></div>-->
+
+        <div class="container-fluid footer">
+            <div class="container">
+                <div class="col-md-7 col-sm-8 col-xs-12" style="padding-top: 10px;">
+                    <p class="copyright">The information provided online is updated, and no physical visit is required.<br> Copyright © All rights reserved with Registration &amp; Stamps Dept, Government of Telangana</p> 
+
+                </div>
+                <div class="col-md-5 col-sm-4 col-xs-12 dd">
+                    <p class="copyright">  <span>Designed and Developed By</span> <a href="https://ts.nic.in/" alt=""><img src="/resources/img/nic.png;jsessionid=jpqnqGQMt6McNhdsJfp0GK4khftYm5LKnpYsv3PJjTJJ8nmXJNY5!1849591189" style="width: 80px;"> </a> </p>
+                </div>
+                <!--                <div class="col-sm-8 col-xs-8 dd">
+                                    <p class="copyright"><span style="color:#333;"> </span> Copyright © All rights reserved with Registration & Stamps Dept, Government of Telangana</p>
+                                </div>-->
+                <!--                <div class="col-sm-4 col-xs-4">
+                                    <div class="footer_social">
+                                        <ul class="footbot_social">
+                                            <li><a class="fb" href="#" target="_self" data-placement="top" data-toggle="tooltip" title="Facebook"><i class="fa fa-facebook"></i></a></li>
+                                            <li><a class="twtr" href="#" target="_self" data-placement="top" data-toggle="tooltip" title="Twitter"><i class="fa fa-twitter"></i></a></li>
+                                            <li><a class="google" href="#" target="_self" data-placement="top" data-toggle="tooltip" title="Google+"><i class="fa fa-google-plus"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </div>-->
+            </div>
+        </div>
+    
+                          
+
+
+
+
+<script>
+    
+    function getJsonSubmit(form) {
+
+        var form = document.getElementById(form);
+        var array = jQuery(form).serializeArray();
+        var json = {};
+
+        jQuery.each(array, function () {
+            json[this.name] = this.value || '';
+        });
+
+
+
+
+        document.getElementById("encodestr").value = btoa(JSON.stringify(json));
+
+        return json;
+    }
+    
+    
+    function getJson() {
+
+        var form = document.getElementById("myForm");
+        var array = jQuery(form).serializeArray();
+        var json = {};
+
+        jQuery.each(array, function () {
+            json[this.name] = this.value || '';
+        });
+
+
+
+
+        document.getElementById("encodestr").value = btoa(JSON.stringify(json));
+
+        return json;
+    }
+
+    function getJson1() {
+
+        var form = document.getElementById("myForm1");
+        var array = jQuery(form).serializeArray();
+        var json = {};
+
+        jQuery.each(array, function () {
+            json[this.name] = this.value || '';
+        });
+
+        document.getElementById("encodestr1").value = btoa(JSON.stringify(json));
+// alert(btoa(JSON.stringify(json)));
+        return json;
+    }
+
+    function getJson2() {
+
+        var form = document.getElementById("myForm2");
+        var array = jQuery(form).serializeArray();
+        var json = {};
+
+        jQuery.each(array, function () {
+            json[this.name] = this.value || '';
+        });
+
+        document.getElementById("encodestr2").value = btoa(JSON.stringify(json));
+// alert(btoa(JSON.stringify(json)));
+        return json;
+    }
+</script>
+
+
+
+        
+        
+
+        
+        
+        
+        
+        
+        <script src="/resources/js/wow.min.js;jsessionid=jpqnqGQMt6McNhdsJfp0GK4khftYm5LKnpYsv3PJjTJJ8nmXJNY5!1849591189"></script>
+        <script src="/resources/js/jquery-3.7.1.js;jsessionid=jpqnqGQMt6McNhdsJfp0GK4khftYm5LKnpYsv3PJjTJJ8nmXJNY5!1849591189"></script>
+        <script src="/resources/js/bootstrap.min.js;jsessionid=jpqnqGQMt6McNhdsJfp0GK4khftYm5LKnpYsv3PJjTJJ8nmXJNY5!1849591189"></script>
+        <script src="/resources/js/jquery.fractionslider.js;jsessionid=jpqnqGQMt6McNhdsJfp0GK4khftYm5LKnpYsv3PJjTJJ8nmXJNY5!1849591189"></script>
+        <script src="/resources/js/jquery.smartmenus.min.js;jsessionid=jpqnqGQMt6McNhdsJfp0GK4khftYm5LKnpYsv3PJjTJJ8nmXJNY5!1849591189"></script>
+        <script src="/resources/js/jquery.smartmenus.bootstrap.min.js;jsessionid=jpqnqGQMt6McNhdsJfp0GK4khftYm5LKnpYsv3PJjTJJ8nmXJNY5!1849591189"></script>
+
+    
+
+
+
+
+<script>
+                                (function (global) {
+
+                                    if (typeof (global) === "undefined") {
+                                        throw new Error("window is undefined");
+                                    }
+
+                                    var _hash = "!";
+                                    var noBackPlease = function () {
+                                        global.location.href += "#";
+
+                                        // making sure we have the fruit available for juice (^__^)
+                                        global.setTimeout(function () {
+                                            global.location.href += "!";
+                                        }, 50);
+                                    };
+
+                                    global.onhashchange = function () {
+                                        if (global.location.hash !== _hash) {
+                                            global.location.hash = _hash;
+                                        }
+                                    };
+
+                                    global.onload = function () {
+                                        noBackPlease();
+
+                                        // disables backspace on page except on input fields and textarea..
+                                        document.body.onkeydown = function (e) {
+                                            var elm = e.target.nodeName.toLowerCase();
+                                            if (e.which === 8 && (elm !== 'input' && elm !== 'textarea')) {
+                                                e.preventDefault();
+                                            }
+                                            // stopping event bubbling up the DOM tree..
+                                            e.stopPropagation();
+                                        };
+                                    }
+
+                                })(window);
+</script>
+
+<script>
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks the button, open the modal 
+    btn.onclick = function () {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
+<!--<script type="text/javascript" src="https://nb4.botjet.ai/static/botjetBuilderSDK/botjet.websdk.js" ></script>
+
+<script>
+    window.onload = function(e){
+        var botjetConfig = {
+            host: "https://nb4.botjet.ai",
+            style: {
+                fontFamily: 'Google+Sans',
+                 width: 400,
+                 height: 500,
+                 accentColor: "#00ada8",
+                position: 'bottom-right',
+                launchBotOnLoad: false,
+                avatar: "https://nb4.botjet.ai/media/documents/568063950271181Medha.png",
+                avatarSize: '2g',
+                enableShadow: true
+            },
+            botConfig: {
+                title: "Medha, IGRS Online Help",
+                client_id: "b-5278da6e-b063-11ea-901a-0200a434c39f",
+                bot_id: "c512a461-6c2f-4908-bf88-732eac38d16e",
+                isAnonymous: true,
+                isLocationRequired: true,
+                notificationServiceWorker: "http://nb4.botjet.ai//static/botjetBuilderSDK/botjet-notif-sw.js",
+                botIcon: "https://nb4.botjet.ai/media/documents/568063950271181Medha.png",
+                titleMessage: "Hello &#128075 I'm Medha,<br/> IGRS Smart Assistant. <br/>I am here to help you."
+                
+            }
+        };
+        init_btj_sdk(botjetConfig);
+    };
+</script>--></body></html>
